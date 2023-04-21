@@ -18,6 +18,6 @@ class Syncer extends Facade
 
     protected static function getFacadeAccessor()
     {
-        return 'syncer.current';
+        return 'syncer';
     }
 }
