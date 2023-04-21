@@ -63,6 +63,6 @@ class SyncerServiceProvider extends ServiceProvider implements DeferrableProvide
 
     public function provides()
     {
-        return ['syncer', 'syncer.master', 'syncer.slaves', 'syncer.cache', 'syncer.connection', 'syncer.redis'];
+        return ['syncer', 'syncer.master', 'syncer.slaves', 'syncer.cache', 'syncer.connection', 'syncer.redis', 'syncer.current'];
     }
 }
