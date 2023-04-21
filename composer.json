@@ -3,7 +3,7 @@
     "description": "App to simple sync redis balances",
     "license": "MIT",
     "require": {
-        "laravel/framework": "^6.2",
+        "laravel/framework": "^8.0",
         "predis/predis": "^1.1"
     },
     "autoload": {
