@@ -46,9 +46,7 @@ class SyncerServiceProvider extends ServiceProvider implements DeferrableProvide
         $this->app->bind('syncer.cache', function ($app) {
             $connection = $app['syncer.connection'];
             $store = new RedisStore($app['redis'], '', $connection);
-            return (new CacheManager($app))->repository(
-                $store->setLockConnection($connection)
-            );
+            return (new CacheManager($app))->repository($store);
         });
 
         $this->app->when(Syncer::class)->needs(Cache::class)->give(function () {
