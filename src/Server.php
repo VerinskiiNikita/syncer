@@ -23,6 +23,7 @@ class Server
     public function setMaster(Server $server)
     {
         $this->master = $server;
+        return $this;
     }
 
     public function getBalanceKey(string $key) : string
