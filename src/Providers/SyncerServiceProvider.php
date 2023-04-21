@@ -35,22 +35,27 @@ class SyncerServiceProvider extends ServiceProvider implements DeferrableProvide
         });
 
         $this->app->singleton('syncer.redis', function ($app) {
-            $config = $app->make('config')->get('database.syncer', []);
-            return new RedisManager($app, Arr::pull($config, 'client', 'phpredis'), $config);
+            $config = [
+                'client' => config('database.redis.client', 'phpredis'),
+                'options' => ['prefix' => ''],
+                'syncer' => config('database.redis.syncer'),
+            ];
+
+            return new RedisManager($app, Arr::pull($config, 'client'), $config);
         });
 
         $this->app->bind('syncer.connection', function ($app) {
-            return $app['syncer.redis']->connection();
+            return $app['syncer.redis']->connection('syncer');
         });
 
         $this->app->bind('syncer.cache', function ($app) {
-            $connection = $app['syncer.connection'];
-            $store = new RedisStore($app['redis'], '', $connection);
-            return (new CacheManager($app))->repository($store);
+            return (new CacheManager($app))->repository(
+                new RedisStore($app['syncer.redis'], '', 'syncer')
+            );
         });
 
-        $this->app->when(Syncer::class)->needs(Cache::class)->give(function () {
-            return $this->app['syncer.cache'];
+        $this->app->when(Server::class)->needs(Cache::class)->give(function ($app) {
+            return $app['syncer.cache'];
         });
     }
 
