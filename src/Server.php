@@ -41,7 +41,8 @@ class Server
         if ($this->master) {
             return $this->master->getBalance($key);
         }
-        return $this->getDefaultBalance($key);
+        $function =$this->getDefaultBalance();
+        return $function($key);
     }
 
     public function getOrderReservKey(string $orderId, string $key)
@@ -97,7 +98,7 @@ class Server
     private function getDefaultBalance()
     {
         return function ($key) {
-            return Cache::get($this->getBalanceKey($key));
+            return Cache::get($this->getBalanceKey($key), 0);
         };
     }
 }
