@@ -20,9 +20,10 @@ class Server
         return $this->name;
     }
 
-    public function setMaster(Server $server)
+    public function setMaster(Server $server): self
     {
         $this->master = $server;
+        return $this;
     }
 
     public function getBalanceKey(string $key) : string
