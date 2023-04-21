@@ -9,6 +9,6 @@ class Syncer extends Facade
 
     protected static function getFacadeAccessor()
     {
-        return 'cache';
+        return 'syncer.current';
     }
 }
