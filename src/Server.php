@@ -9,9 +9,11 @@ class Server
     protected $name;
     protected $balance;
     protected $master = null;
+    protected $cache;
 
     public function __construct($name)
     {
+        $this->cache = app()['syncer.cache'];
         $this->name = $name;
     }
 
@@ -52,18 +54,18 @@ class Server
 
     public function setBalance($key, $value): self
     {
-        Cache::put($this->getBalanceKey($key), $value);
+        $this->cache->put($this->getBalanceKey($key), $value);
         return $this;
     }
 
     public function getReserved(string $key) : int
     {
-        return Cache::get($this->getReservedKey($key), 0);
+        return $this->cache->get($this->getReservedKey($key), 0);
     }
 
     public function getOrderReserved(string $orderId, string $key)
     {
-        return Cache::get($this->getOrderReservKey($orderId, $key));
+        return $this->cache->get($this->getOrderReservKey($orderId, $key));
     }
 
     public function getAvailable(string $key) : int
@@ -77,8 +79,8 @@ class Server
             return false;
         }
 
-        Cache::increment($this->getOrderReservKey($orderId, $key), $quantity);
-        Cache::increment($this->getReserved($key), $quantity);
+        $this->cache->increment($this->getOrderReservKey($orderId, $key), $quantity);
+        $this->cache->increment($this->getReserved($key), $quantity);
 
         return true;
     }
@@ -89,8 +91,8 @@ class Server
             return false;
         }
 
-        Cache::decrement($this->getOrderReservKey($orderId, $key), $quantity);
-        Cache::decrement($this->getReserved($key), $quantity);
+        $this->cache->decrement($this->getOrderReservKey($orderId, $key), $quantity);
+        $this->cache->decrement($this->getReserved($key), $quantity);
 
         return true;
     }
@@ -98,7 +100,7 @@ class Server
     private function getDefaultBalance()
     {
         return function ($key) {
-            return Cache::get($this->getBalanceKey($key), 0);
+            return $this->cache->get($this->getBalanceKey($key), 0);
         };
     }
 }

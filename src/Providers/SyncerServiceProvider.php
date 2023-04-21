@@ -53,10 +53,6 @@ class SyncerServiceProvider extends ServiceProvider implements DeferrableProvide
                 new RedisStore($app['syncer.redis'], '', 'syncer')
             );
         });
-
-        $this->app->when(Server::class)->needs(Cache::class)->give(function ($app) {
-            return $app['syncer.cache'];
-        });
     }
 
     public function boot()
