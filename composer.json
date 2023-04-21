@@ -1,0 +1,19 @@
+{
+    "name": "sotoro/syncer",
+    "description": "App to simple sync redis balances",
+    "license": "MIT",
+    "require": {
+        "laravel/framework": "^6.2",
+        "predis/predis": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sotoro\\Syncer\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "sotoro"
+        }
+    ]
+}
