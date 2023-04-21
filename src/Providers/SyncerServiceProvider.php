@@ -34,7 +34,6 @@ class SyncerServiceProvider extends ServiceProvider implements DeferrableProvide
     {
         $this->publishes([
             __DIR__.'/../../config/syncer.php' => config_path('syncer.php'),
-            __DIR__.'/../../config/database.php' => config_path('database.php'),
         ]);
     }
 
