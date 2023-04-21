@@ -28,7 +28,7 @@ class Server
 
     public function getBalanceKey(string $key) : string
     {
-        return sprintf('%s.%.s.balance', $this->name, $key);
+        return sprintf('%s.%.s.balance', $this->master->getName(), $key);
     }
 
     public function getReservedKey(string $key) : string
@@ -49,10 +49,9 @@ class Server
         return sprintf('%s.%s.%s.reserved', $this->name, $orderId, $key);
     }
 
-    public function setBalance(callable $function): self
+    public function setBalance($key, $value): self
     {
-        $this->balance = $function;
-        return $this;
+        return Cache::get($this->getBalanceKey($key), $value);
     }
 
     public function getReserved(string $key) : int
