@@ -45,6 +45,10 @@ class Syncer
         return true;
     }
 
+    /**
+     * @param string $key
+     * @return integer
+     */
     public function getBalance(string $key): int
     {
         return $this->master->getBalance($key);
@@ -52,7 +56,7 @@ class Syncer
 
     public function getReserved(string $key): int
     {
-        return $this->master->getReserved($key);
+        return array_sum($this->slaves)$this->master->getReserved($key);
     }
 
     public function getAvailable(string $key)
@@ -79,5 +83,10 @@ class Syncer
         }
 
         return $this->current->reserve($key, $id, $quantity);
+    }
+
+    public function dereserve(string $key, string $id, int $quantity = 1): bool
+    {
+
     }
 }

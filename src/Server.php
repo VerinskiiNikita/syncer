@@ -2,7 +2,7 @@
 
 namespace Sotoro\Syncer;
 
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Contracts\Cache\Repository;
 
 class Server
 {
@@ -11,9 +11,9 @@ class Server
     protected $master = null;
     protected $cache;
 
-    public function __construct($name)
+    public function __construct($name, Repository $cache)
     {
-        $this->cache = app()['syncer.cache'];
+        $this->cache = $cache;
         $this->name = $name;
     }
 
@@ -28,28 +28,9 @@ class Server
         return $this;
     }
 
-    public function getBalanceKey(string $key) : string
-    {
-        return sprintf('%s.%.s.balance', app()['syncer.master']->getName(), $key);
-    }
-
-    public function getReservedKey(string $key) : string
-    {
-        return sprintf('%s.%s.reserved', $this->name, $key);
-    }
-
     public function getBalance(string $key) : int
     {
-        if ($this->master) {
-            return $this->master->getBalance($key);
-        }
-        $function =$this->getDefaultBalance();
-        return $function($key);
-    }
-
-    public function getOrderReservKey(string $orderId, string $key)
-    {
-        return sprintf('%s.%s.%s.reserved', $this->name, $orderId, $key);
+        return $this->cache->get($this->getBalanceKey($key), 0);
     }
 
     public function setBalance($key, $value): self
@@ -97,10 +78,18 @@ class Server
         return true;
     }
 
-    private function getDefaultBalance()
+    private function getBalanceKey(string $key) : string
     {
-        return function ($key) {
-            return $this->cache->get($this->getBalanceKey($key), 0);
-        };
+        return sprintf('%s.%.s.balance', app()['syncer.master']->getName(), $key);
+    }
+
+    private function getReservedKey(string $key) : string
+    {
+        return sprintf('%s.%s.reserved', $this->name, $key);
+    }
+    
+    private function getOrderReservKey(string $orderId, string $key)
+    {
+        return sprintf('%s.%s.%s.reserved', $this->name, $orderId, $key);
     }
 }
