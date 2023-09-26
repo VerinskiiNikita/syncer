@@ -1,1 +1,5 @@
-echo 123;
+node('php') {
+    stage('docker install') {
+      sh './run.sh'
+    }
+}
